@@ -11,8 +11,7 @@
 		<RepositoryUrl>https://github.com/ButchersBoy/Dragablz</RepositoryUrl>
 		<PackageTags>WPF TabControl Tab Tearable</PackageTags>
 		<PackageReleaseNotes>Support for .NET 6</PackageReleaseNotes>
-		<RepositoryType>git</RepositoryType>
-		<DocumentationFile>..\bin\Release\Dragablz.xml</DocumentationFile>
+		<RepositoryType>git</RepositoryType>		
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
