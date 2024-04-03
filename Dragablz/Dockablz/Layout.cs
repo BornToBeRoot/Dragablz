@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -193,12 +192,26 @@ namespace Dragablz.Dockablz
             return branchResult;
         }        
 
+        // Add parition as dependency property
+        public static readonly DependencyProperty PartitionProperty = DependencyProperty.Register(
+            "Partition", typeof (object), typeof (Layout), new PropertyMetadata(default(object)));
+        
         /// <summary>
         /// Use in conjuction with the <see cref="InterTabController.Partition"/> on a <see cref="TabablzControl"/>
         /// to isolate drag and drop spaces/control instances.
         /// </summary>
-        public string Partition { get; set; }
+        public object Partition
+        {
+            get { return (object) GetValue(PartitionProperty); }
+            set { SetValue(PartitionProperty, value); }
+        }
 
+        /// <summary>
+        /// Use in conjuction with the <see cref="InterTabController.Partition"/> on a <see cref="TabablzControl"/>
+        /// to isolate drag and drop spaces/control instances.
+        /// </summary>
+        //public string Partition { get; set; }
+        
         public static readonly DependencyProperty InterLayoutClientProperty = DependencyProperty.Register(
             "InterLayoutClient", typeof (IInterLayoutClient), typeof (Layout), new PropertyMetadata(new DefaultInterLayoutClient()));
 
@@ -450,7 +463,7 @@ namespace Dragablz.Dockablz
             if (draggingWindow == null) return;
 
             foreach (var loadedLayout in LoadedLayouts.Where(l =>
-                l.Partition == dragablzItem.PartitionAtDragStart &&
+                l.Partition?.ToString() == dragablzItem.PartitionAtDragStart &&
                 !Equals(Window.GetWindow(l), draggingWindow)))
 
             {

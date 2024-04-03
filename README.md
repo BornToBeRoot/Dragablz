@@ -1,4 +1,18 @@
 ![Dragablz](https://dragablz.files.wordpress.com/2015/01/dragablztext22.png "Dragablz")
+
+**This is a fork of the original [Dragablz](https://github.com/ButchersBoy/Dragablz) project by @ButchersBoy with some additional features and bug fixes for [NETworkManager](https://github.com/BornToBeRoot/NETworkManager)**
+
+Fixes and features:
+- Upgrade to .NET 8
+- Fix [right click and drag will "lock" tab item](https://github.com/ButchersBoy/Dragablz/issues/132) via [this comment](https://github.com/ButchersBoy/Dragablz/issues/132#issuecomment-1317714396) and [Dragablz#275](https://github.com/ButchersBoy/Dragablz/pull/275)
+  Files changed:
+    DragablzItem.cs (https://github.com/BornToBeRoot/Dragablz/blob/2b70e0f3a686372ea0ddd4d5bf58e5ac317edcaf/Dragablz/DragablzItem.cs#L483-L499)
+- Use `DependencyProperty` for `Partition` in `InterTabController` and `Layout` to allow binding
+  Files changed:
+    InterTabController.cs ()
+    Dockablz\Layout.cs ()
+  
+
 ========
 [![Gitter](https://img.shields.io/badge/Gitter-Join%20Chat-green.svg?style=flat-square)](https://gitter.im/ButchersBoy/Dragablz?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![NuGet](https://img.shields.io/nuget/v/Dragablz.svg?style=flat-square)](http://www.nuget.org/packages/Dragablz/)
