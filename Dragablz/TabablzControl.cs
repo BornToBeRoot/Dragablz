@@ -973,7 +973,7 @@ namespace Dragablz
             foreach (var otherItem in _dragablzItemsControl.Containers<DragablzItem>().Except(e.DragablzItem))                
                 otherItem.IsSelected = false;                
             e.DragablzItem.IsSelected = true;
-            e.DragablzItem.PartitionAtDragStart = InterTabController?.Partition;
+            e.DragablzItem.PartitionAtDragStart = InterTabController?.Partition.ToString();
             var item = _dragablzItemsControl.ItemContainerGenerator.ItemFromContainer(e.DragablzItem);
             var tabItem = item as TabItem;
             if (tabItem != null)
