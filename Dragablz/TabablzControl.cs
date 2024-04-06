@@ -369,6 +369,22 @@ namespace Dragablz
             set { SetValue(FixedHeaderCountProperty, value); }
         }
 
+        
+        public static readonly DependencyProperty DisableBranchConsolidationProperty = DependencyProperty.Register(
+            "DisableBranchConsolidation", typeof (bool), typeof (TabablzControl), new PropertyMetadata(default(bool)));
+
+        /// <summary>
+        /// Disable the consolidation of branches when a tab is dragged out of a branch. Set it to <c>true</c> if you have
+        /// a main TabablzControl that is used to create new tab items and you don't want to remove this TabaBlzControl
+        /// when the last tab is dragged out. In dynamically created TabablzControls this property should then be set to
+        /// <c>false</c> (default).
+        /// </summary>
+        public bool DisableBranchConsolidation
+        {
+            get { return (bool) GetValue(DisableBranchConsolidationProperty); }
+            set { SetValue(DisableBranchConsolidationProperty, value); }
+        }
+        
         public static readonly DependencyProperty InterTabControllerProperty = DependencyProperty.Register(
             "InterTabController", typeof (InterTabController), typeof (TabablzControl), new PropertyMetadata(null, InterTabControllerPropertyChangedCallback));
 
@@ -507,8 +523,6 @@ namespace Dragablz
             get { return (ItemActionCallback) GetValue(ConsolidatingOrphanedItemCallbackProperty); }
             set { SetValue(ConsolidatingOrphanedItemCallbackProperty, value); }
         }
-
-        
 
         private static readonly DependencyPropertyKey IsDraggingWindowPropertyKey =
             DependencyProperty.RegisterReadOnly(
@@ -1248,7 +1262,9 @@ namespace Dragablz
             {
                 _dragablzItemsControl.MinHeight = minSize.Height;
                 _dragablzItemsControl.MinWidth = minSize.Width;
-                Layout.ConsolidateBranch(this);
+                
+                if(!DisableBranchConsolidation)
+                    Layout.ConsolidateBranch(this);
             }
 
             RestorePreviousSelection();
