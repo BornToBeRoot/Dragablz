@@ -19,4 +19,4 @@ Features and fixes:
 
 - Feature: DependencyProperty to disable consolidate branch in TabalzControl added (e.g. to keep the main TabablzControl that is responsible for creating new tabs)
     Files changed:
-        - TabablzControl.cs (https://github.com/BornToBeRoot/Dragablz/blob/4fbcc3ddb32ba96ecf94346abef3cf18dd6ae335/Dragablz/TabablzControl.cs#L373-L386, https://github.com/BornToBeRoot/Dragablz/blob/4fbcc3ddb32ba96ecf94346abef3cf18dd6ae335/Dragablz/TabablzControl.cs#L1266-L1267)
+        - TabablzControl.cs (https://github.com/BornToBeRoot/Dragablz/blob/a7575982a304493d44e5fe4ef726bc7c6ab0b070/Dragablz/TabablzControl.cs#L1110-L1170, https://github.com/BornToBeRoot/Dragablz/blob/a7575982a304493d44e5fe4ef726bc7c6ab0b070/Dragablz/TabablzControl.cs#L373-L388, https://github.com/BornToBeRoot/Dragablz/blob/a7575982a304493d44e5fe4ef726bc7c6ab0b070/Dragablz/TabablzControl.cs#L1261-L1268)
