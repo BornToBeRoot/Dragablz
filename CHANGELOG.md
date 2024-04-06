@@ -16,3 +16,7 @@ Features and fixes:
     Files changed:
         - TabEmptiedResponse.cs (https://github.com/BornToBeRoot/Dragablz/blob/7ac6fe4543daabd2ce381d80fa002eb9952dae3c/Dragablz/TabEmptiedResponse.cs#L10-L13)
         - TabablzControl.cs (https://github.com/BornToBeRoot/Dragablz/blob/7ac6fe4543daabd2ce381d80fa002eb9952dae3c/Dragablz/TabablzControl.cs#L1094-L1156)
+
+- Feature: DependencyProperty to disable consolidate branch in TabalzControl added (e.g. to keep the main TabablzControl that is responsible for creating new tabs)
+    Files changed:
+        - TabablzControl.cs (https://github.com/BornToBeRoot/Dragablz/blob/4fbcc3ddb32ba96ecf94346abef3cf18dd6ae335/Dragablz/TabablzControl.cs#L373-L386, https://github.com/BornToBeRoot/Dragablz/blob/4fbcc3ddb32ba96ecf94346abef3cf18dd6ae335/Dragablz/TabablzControl.cs#L1266-L1267)
