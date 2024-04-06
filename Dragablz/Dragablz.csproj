@@ -12,7 +12,7 @@
 		<PackageProjectUrl>http://dragablz.net</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ButchersBoy/Dragablz</RepositoryUrl>
 		<PackageTags>WPF TabControl Tab Tearable</PackageTags>
-		<PackageReleaseNotes>Support for .NET 6</PackageReleaseNotes>
+		<PackageReleaseNotes>Support for .NET 8</PackageReleaseNotes>
 		<RepositoryType>git</RepositoryType>		
 	</PropertyGroup>
 
