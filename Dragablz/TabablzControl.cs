@@ -1099,7 +1099,7 @@ namespace Dragablz
             var minSize = EmptyHeaderSizingHint == EmptyHeaderSizingHint.PreviousTab
                 ? new Size(_dragablzItemsControl.ActualWidth, _dragablzItemsControl.ActualHeight)
                 : new Size();
-            
+
             _dragablzItemsControl.MinHeight = 0;
             _dragablzItemsControl.MinWidth = 0;
 
@@ -1107,15 +1107,40 @@ namespace Dragablz
             RemoveFromSource(item);
             _itemsHolder.Children.Remove(contentPresenter);
 
-            if (Items.Count != 0) return item;
+            if (Items.Count != 0)
+                return item;
 
+            // Find window
             var window = Window.GetWindow(this);
-            if (window != null 
-                && InterTabController != null                
-                && InterTabController.InterTabClient.TabEmptiedHandler(this, window) == TabEmptiedResponse.CloseWindowOrLayoutBranch)
-            {
-                if (Layout.ConsolidateBranch(this)) return item;
 
+            if (window == null || InterTabController == null)
+            {
+                _dragablzItemsControl.MinHeight = minSize.Height;
+                _dragablzItemsControl.MinWidth = minSize.Width;
+
+                return item;
+            }
+
+            // Get tab emptied response
+            var tabEmptiedResponse = InterTabController.InterTabClient.TabEmptiedHandler(this, window);
+
+            // This is e.g. to DoNothing
+            if (tabEmptiedResponse is not (TabEmptiedResponse.CloseLayoutBranch
+                or TabEmptiedResponse.CloseWindowOrLayoutBranch))
+            {
+                _dragablzItemsControl.MinHeight = minSize.Height;
+                _dragablzItemsControl.MinWidth = minSize.Width;
+
+                return item;
+            }
+            
+            // Consolidate branch
+            if (Layout.ConsolidateBranch(this))
+                return item;
+
+            // Close window
+            if (tabEmptiedResponse is TabEmptiedResponse.CloseWindowOrLayoutBranch)
+            {
                 try
                 {
                     SetIsClosingAsPartOfDragOperation(window, true);
@@ -1124,13 +1149,9 @@ namespace Dragablz
                 finally
                 {
                     SetIsClosingAsPartOfDragOperation(window, false);
-                }                    
+                }
             }
-            else
-            {
-                _dragablzItemsControl.MinHeight = minSize.Height;
-                _dragablzItemsControl.MinWidth = minSize.Width;
-            }
+
             return item;
         }
 
