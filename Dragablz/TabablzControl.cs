@@ -378,6 +378,8 @@ namespace Dragablz
         /// a main TabablzControl that is used to create new tab items and you don't want to remove this TabaBlzControl
         /// when the last tab is dragged out. In dynamically created TabablzControls this property should then be set to
         /// <c>false</c> (default).
+        /// If this is set to <c>true</c> the <see cref="TabEmptiedResponse.CloseLayoutBranch"/> and <see cref="TabEmptiedResponse.CloseWindowOrLayoutBranch"/>
+        /// is ignored.
         /// </summary>
         public bool DisableBranchConsolidation
         {
@@ -1121,33 +1123,31 @@ namespace Dragablz
             RemoveFromSource(item);
             _itemsHolder.Children.Remove(contentPresenter);
 
+            // Return if it is not the last item
             if (Items.Count != 0)
                 return item;
 
+            // Set min size
+            _dragablzItemsControl.MinHeight = minSize.Height;
+            _dragablzItemsControl.MinWidth = minSize.Width;
+
+            // Disable branch consolidation (close branch or window is ignored)
+            if (DisableBranchConsolidation)
+                return item;
+            
             // Find window
             var window = Window.GetWindow(this);
 
             if (window == null || InterTabController == null)
-            {
-                _dragablzItemsControl.MinHeight = minSize.Height;
-                _dragablzItemsControl.MinWidth = minSize.Width;
-
                 return item;
-            }
-
+            
             // Get tab emptied response
             var tabEmptiedResponse = InterTabController.InterTabClient.TabEmptiedHandler(this, window);
 
             // This is e.g. to DoNothing
-            if (tabEmptiedResponse is not (TabEmptiedResponse.CloseLayoutBranch
-                or TabEmptiedResponse.CloseWindowOrLayoutBranch))
-            {
-                _dragablzItemsControl.MinHeight = minSize.Height;
-                _dragablzItemsControl.MinWidth = minSize.Width;
-
+            if (tabEmptiedResponse is not (TabEmptiedResponse.CloseLayoutBranch or TabEmptiedResponse.CloseWindowOrLayoutBranch))
                 return item;
-            }
-            
+
             // Consolidate branch
             if (Layout.ConsolidateBranch(this))
                 return item;
