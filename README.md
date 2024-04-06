@@ -1,9 +1,7 @@
 ![Dragablz](https://dragablz.files.wordpress.com/2015/01/dragablztext22.png "Dragablz")
-
+=======
 **This is a fork of the original [Dragablz](https://github.com/ButchersBoy/Dragablz) project by @ButchersBoy with some additional features and bug fixes (for [NETworkManager](https://github.com/BornToBeRoot/NETworkManager))**
-
-========
-
+=======
 [![Gitter](https://img.shields.io/badge/Gitter-Join%20Chat-green.svg?style=flat-square)](https://gitter.im/ButchersBoy/Dragablz?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![NuGet](https://img.shields.io/nuget/v/Dragablz.svg?style=flat-square)](http://www.nuget.org/packages/Dragablz/)
 [![Build](https://img.shields.io/appveyor/ci/ButchersBoy/dragablz.svg?style=flat-square)](https://ci.appveyor.com/project/ButchersBoy/dragablz)
