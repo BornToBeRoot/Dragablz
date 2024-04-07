@@ -152,7 +152,7 @@
 
     <Style x:Key="MahAppsTrapezoidDragableTabItemStyle"  TargetType="{x:Type dragablz:DragablzItem}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource MahAppsFocusVisual}"/>
-        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Margin" Value="0 0 0 0"/>
@@ -199,12 +199,12 @@
                             <Setter TargetName="contentPresenter" Property="Content" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.Header}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}" TargetName="Trapezoid"/>
-                            <Setter Property="LongBasePenBrush" Value="{DynamicResource AccentColorBrush3}" TargetName="Trapezoid"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}" TargetName="Trapezoid"/>
+                            <Setter Property="LongBasePenBrush" Value="{DynamicResource MahApps.Brushes.Accent3}" TargetName="Trapezoid"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" TargetName="Trapezoid"/>
-                            <Setter Property="LongBasePenBrush" Value="{DynamicResource AccentColorBrush}" TargetName="Trapezoid"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}" TargetName="Trapezoid"/>
+                            <Setter Property="LongBasePenBrush" Value="{DynamicResource MahApps.Brushes.Accent}" TargetName="Trapezoid"/>
                             <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -214,8 +214,8 @@
     </Style>
 
     <Style x:Key="MahAppsMetroBaseWindowButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="{DynamicResource TransparentWhiteBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource WhiteColorBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Transparent}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Padding" Value="1" />
@@ -244,10 +244,10 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource SemiTransparentWhiteBrush}" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.SemiTransparent}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource HighlightBrush}" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}" />
                 <Setter Property="Foreground" Value="White" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
@@ -271,7 +271,7 @@
 
     <Style TargetType="{x:Type dragablz:HeaderedDragablzItem}" x:Key="MahAppsToolDragablzItemStyle">
         <Style.Setters>
-            <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush2}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}" />
             <Setter Property="BorderThickness" Value="4" />
             <Setter Property="Canvas.Left" Value="{Binding X, RelativeSource={RelativeSource Self}}" />
             <Setter Property="Canvas.Top" Value="{Binding Y, RelativeSource={RelativeSource Self}}" />
@@ -279,9 +279,9 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type dragablz:HeaderedDragablzItem}">
                         <Grid Margin="{TemplateBinding Margin}">
-                            <Border Background="{DynamicResource WhiteColorBrush}">
+                            <Border Background="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Border.Effect>
-                                    <DropShadowEffect BlurRadius="10" ShadowDepth="5" Direction="315" Color="{DynamicResource AccentColor2}" Opacity=".5" />
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="5" Direction="315" Color="{DynamicResource MahApps.Color.Accent2}" Opacity=".5" />
                                 </Border.Effect>
                             </Border>
                             <Border BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="{TemplateBinding Control.Padding}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" SnapsToDevicePixels="True">
@@ -433,9 +433,9 @@
     </Style>    
 
     <Style TargetType="{x:Type dragablz:TabablzControl}" x:Key="MahAppsTabablzControlStyle">
-        <Setter Property="Background" Value="{DynamicResource WhiteColorBrush}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
         <Setter Property="AdjacentHeaderItemOffset" Value="-12" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource MahAppsTrapezoidDragableTabItemStyle}" />        
     </Style>
