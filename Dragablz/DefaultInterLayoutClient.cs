@@ -15,7 +15,7 @@ namespace Dragablz
     {
         public INewTabHost<UIElement> GetNewHost(object partition, TabablzControl source)
         {
-            var tabablzControl = new TabablzControl {DataContext = source.DataContext};
+            var tabablzControl = new TabablzControl { DataContext = source.DataContext };
 
             Clone(source, tabablzControl);
 
@@ -27,7 +27,7 @@ namespace Dragablz
                 Partition = source.InterTabController.Partition
             };
             Clone(source.InterTabController, newInterTabController);
-            tabablzControl.SetCurrentValue(TabablzControl.InterTabControllerProperty, newInterTabController);            
+            tabablzControl.SetCurrentValue(TabablzControl.InterTabControllerProperty, newInterTabController);
 
             return new NewTabHost<UIElement>(tabablzControl, tabablzControl);
         }
@@ -39,10 +39,10 @@ namespace Dragablz
             {
                 if (localValueEnumerator.Current.Property.ReadOnly ||
                     localValueEnumerator.Current.Value is FrameworkElement) continue;
-                
+
                 if (!(localValueEnumerator.Current.Value is BindingExpressionBase))
-                    to.SetCurrentValue(localValueEnumerator.Current.Property, localValueEnumerator.Current.Value);                
-            }            
+                    to.SetCurrentValue(localValueEnumerator.Current.Property, localValueEnumerator.Current.Value);
+            }
         }
     }
 }

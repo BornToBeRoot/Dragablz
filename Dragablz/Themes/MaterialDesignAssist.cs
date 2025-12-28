@@ -17,7 +17,7 @@ namespace Dragablz.Themes
         /// Framework use only.
         /// </summary>
         public static readonly DependencyProperty IndicatorBrushProperty = DependencyProperty.RegisterAttached(
-            "IndicatorBrush", typeof (Brush), typeof (MaterialDesignAssist), new PropertyMetadata(default(Brush)));
+            "IndicatorBrush", typeof(Brush), typeof(MaterialDesignAssist), new PropertyMetadata(default(Brush)));
 
         /// <summary>
         /// The indicator (underline) brush.
@@ -36,7 +36,7 @@ namespace Dragablz.Themes
         /// <returns></returns>
         public static Brush GetIndicatorBrush(DependencyObject element)
         {
-            return (Brush) element.GetValue(IndicatorBrushProperty);
+            return (Brush)element.GetValue(IndicatorBrushProperty);
         }
     }
 }

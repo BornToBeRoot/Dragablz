@@ -45,7 +45,7 @@ namespace DragablzDemo
 
         private void Branch(Orientation orientation)
         {
-            var branchResult = Layout.Branch(_tabablzControl, orientation, false, SplitRatio/10);
+            var branchResult = Layout.Branch(_tabablzControl, orientation, false, SplitRatio / 10);
 
             var newItem = new HeaderedItemViewModel
             {
@@ -58,7 +58,7 @@ namespace DragablzDemo
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;

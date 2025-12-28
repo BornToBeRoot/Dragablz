@@ -33,11 +33,11 @@ namespace DragablzDemo
             _peopleMonitor = new VerticalPositionMonitor();
             _peopleMonitor.OrderChanged += PeopleMonitorOnOrderChanged;
 
-            _people.Add(new Person {FirstName = "Albert", LastName = "Einstein"});
+            _people.Add(new Person { FirstName = "Albert", LastName = "Einstein" });
             _people.Add(new Person { FirstName = "Neil", LastName = "Tyson" });
             _people.Add(new Person { FirstName = "James", LastName = "Willock" }); //i move in esteemed circles ;)
 
-            _viewModels.Add(new SimpleViewModel { Name = "Alpha", SimpleContent = "This is the alpha content"});
+            _viewModels.Add(new SimpleViewModel { Name = "Alpha", SimpleContent = "This is the alpha content" });
             _viewModels.Add(new SimpleViewModel { Name = "Beta", SimpleContent = "Beta content", IsSelected = true });
             _viewModels.Add(new SimpleViewModel { Name = "Gamma", SimpleContent = "And here is the gamma content" });
 
@@ -105,7 +105,7 @@ namespace DragablzDemo
 
         public ReadOnlyObservableCollection<Person> People
         {
-            get { return new ReadOnlyObservableCollection<Person>(_people); }            
+            get { return new ReadOnlyObservableCollection<Person>(_people); }
         }
 
         public ICommand AddNewPerson
@@ -141,7 +141,7 @@ namespace DragablzDemo
 
         public PositionMonitor BasicColourMonitor
         {
-            get { return _basicColourMonitor; }            
+            get { return _basicColourMonitor; }
         }
 
         public PositionMonitor PeopleMonitor

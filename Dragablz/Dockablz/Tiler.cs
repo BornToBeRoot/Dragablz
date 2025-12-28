@@ -14,7 +14,7 @@ namespace Dragablz.Dockablz
     {
         public static void Tile(IEnumerable<DragablzItem> dragablzItems, Size bounds)
         {
-            if (dragablzItems == null) throw new ArgumentNullException("dragablzItems");            
+            if (dragablzItems == null) throw new ArgumentNullException("dragablzItems");
 
             var items = new Queue<DragablzItem>(dragablzItems.OrderBy(Panel.GetZIndex));
 
@@ -48,7 +48,7 @@ namespace Dragablz.Dockablz
             var items = dragablzItems.ToList();
 
             var x = 0.0;
-            var width = bounds.Width/items.Count;
+            var width = bounds.Width / items.Count;
             foreach (var dragablzItem in items)
             {
                 Layout.SetFloatingItemState(dragablzItem, WindowState.Normal);

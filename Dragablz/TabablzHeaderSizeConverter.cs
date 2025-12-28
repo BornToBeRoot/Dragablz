@@ -12,7 +12,7 @@ namespace Dragablz
     /// Provides a little help for sizing the header panel in the tab control
     /// </summary>
     public class TabablzHeaderSizeConverter : IMultiValueConverter
-    {        
+    {
         public Orientation Orientation { get; set; }
 
         /// <summary>

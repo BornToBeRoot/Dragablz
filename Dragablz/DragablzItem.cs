@@ -490,7 +490,8 @@ namespace Dragablz
                 while (Mouse.RightButton == MouseButtonState.Pressed)
                 {
                     await Task.Delay(25);
-                };
+                }
+                ;
 
                 _thumb.SetCurrentValue(IsHitTestVisibleProperty, currentThumbIsHitTestVisible);
             }

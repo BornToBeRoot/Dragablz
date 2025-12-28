@@ -8,7 +8,7 @@ namespace DragablzDemo
     public class SimpleViewModel : INotifyPropertyChanged
     {
         private bool _isSelected;
-        
+
         public string Name { get; set; }
 
         public object SimpleContent { get; set; }

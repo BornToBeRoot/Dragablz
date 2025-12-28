@@ -15,14 +15,14 @@ namespace Dragablz.Dockablz
         public LayoutAccessor(Layout layout)
         {
             if (layout == null) throw new ArgumentNullException("layout");
-            
+
             _layout = layout;
 
             var branch = Layout.Content as Branch;
             if (branch != null)
                 _branchAccessor = new BranchAccessor(branch);
-            else            
-                _tabablzControl = Layout.Content as TabablzControl;            
+            else
+                _tabablzControl = Layout.Content as TabablzControl;
         }
 
         public Layout Layout
@@ -66,7 +66,7 @@ namespace Dragablz.Dockablz
                 {
                     branchVisitor(_branchAccessor);
                 }
-                    
+
                 return this;
             }
 

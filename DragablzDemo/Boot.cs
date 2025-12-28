@@ -19,7 +19,7 @@ namespace DragablzDemo
         [STAThread]
         public static void Main(string[] args)
         {
-            var app = new App {ShutdownMode = ShutdownMode.OnLastWindowClose};
+            var app = new App { ShutdownMode = ShutdownMode.OnLastWindowClose };
             app.InitializeComponent();
 
             new QuickStartWindow().Show();
@@ -35,19 +35,19 @@ namespace DragablzDemo
                     Header = "Fixed",
                     Content = "There is a dragablz:DragablzItemsControl.FixedItemCount of 1, so this header is fixed!"
                 },
-                new HeaderedItemViewModel {Header = "MDI Demo", Content = new MdiExample()},
+                new HeaderedItemViewModel { Header = "MDI Demo", Content = new MdiExample() },
                 new HeaderedItemViewModel
                 {
                     Header = "Layout Info",
-                    Content = new LayoutManagementExample {DataContext = new LayoutManagementExampleViewModel()}
+                    Content = new LayoutManagementExample { DataContext = new LayoutManagementExampleViewModel() }
                 },
                 new HeaderedItemViewModel
                 {
-                    Header = new CustomHeaderViewModel {Header = "Header"},
+                    Header = new CustomHeaderViewModel { Header = "Header" },
                     Content =
                         "This tab illustrates how an individual header can be customized, without having to change the DragablzItem tab header template."
                 },
-                new HeaderedItemViewModel {Header = "Tues", Content = "Tuesday's child is full of grace"} //,
+                new HeaderedItemViewModel { Header = "Tues", Content = "Tuesday's child is full of grace" } //,
                 //new HeaderedItemViewModel { Header = "Wed", Content = "Wednesday's child is full of woe" }//,
                 //new HeaderedItemViewModel { Header = "Thu", Content = "Thursday's child has far to go" },
                 //new HeaderedItemViewModel { Header = "Fri", Content = "Friday's child loving and giving" }//,
@@ -55,7 +55,7 @@ namespace DragablzDemo
                 //new HeaderedItemViewModel { Header = "Sun", Content = "Sunday's child is awkwardly not fitting into this demo" }                 
             );
             boundExampleModel.ToolItems.Add(
-                new HeaderedItemViewModel {Header = "January", Content = "Welcome to the January tool/float item."});
+                new HeaderedItemViewModel { Header = "January", Content = "Welcome to the January tool/float item." });
             boundExampleModel.ToolItems.Add(
                 new HeaderedItemViewModel
                 {
@@ -64,7 +64,7 @@ namespace DragablzDemo
                         new Border
                         {
                             Background = Brushes.Yellow,
-                            Child = new TextBlock {Text = "Welcome to the July tool/float item."},
+                            Child = new TextBlock { Text = "Welcome to the July tool/float item." },
                             HorizontalAlignment = HorizontalAlignment.Stretch
                         }
                 });
@@ -78,5 +78,5 @@ namespace DragablzDemo
         }
     }
 
-    
+
 }
