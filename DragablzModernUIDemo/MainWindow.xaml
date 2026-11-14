@@ -6,8 +6,8 @@
                          Height="350" Width="525">
     <Window.Style>
         <Style TargetType="{x:Type dragablz:DragablzWindow}" BasedOn="{StaticResource {x:Type dragablz:DragablzWindow}}">
-            <Setter Property="Background" Value="{DynamicResource GrayBrush8}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource WindowTitleColorBrush}" />
+            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray8}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.WindowTitle}" />
         </Style>
     </Window.Style>
     <Window.Resources>
@@ -17,8 +17,7 @@
             </ResourceDictionary.MergedDictionaries>            
         </ResourceDictionary>        
     </Window.Resources>
-    <dragablz:TabablzControl Background="{DynamicResource WhiteColorBrush}"
-                             DefaultHeaderItemStyle="{StaticResource MahAppsTabHeaderItemStyle}">
+    <dragablz:TabablzControl Style="{StaticResource MahAppsTabablzControlStyle}">
         <dragablz:TabablzControl.InterTabController>
             <dragablz:InterTabController />
         </dragablz:TabablzControl.InterTabController>

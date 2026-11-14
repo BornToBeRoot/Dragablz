@@ -205,7 +205,7 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}" TargetName="Trapezoid"/>
                             <Setter Property="LongBasePenBrush" Value="{DynamicResource MahApps.Brushes.Accent}" TargetName="Trapezoid"/>
-                            <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -281,7 +281,7 @@
                         <Grid Margin="{TemplateBinding Margin}">
                             <Border Background="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Border.Effect>
-                                    <DropShadowEffect BlurRadius="10" ShadowDepth="5" Direction="315" Color="{DynamicResource MahApps.Color.Accent2}" Opacity=".5" />
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="5" Direction="315" Color="{DynamicResource MahApps.Colors.Accent2}" Opacity=".5" />
                                 </Border.Effect>
                             </Border>
                             <Border BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="{TemplateBinding Control.Padding}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" SnapsToDevicePixels="True">
