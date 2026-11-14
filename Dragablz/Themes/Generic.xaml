@@ -1573,7 +1573,7 @@
                                 Margin="0 -1 0 0">
                             <Grid x:Name="PART_ItemsHolder" />
                         </Border>
-                        <Grid Grid.Column="0" Grid.Row="0" Margin="0,2,2,0" x:Name="HeaderContainerGrid" Visibility="{TemplateBinding IsHeaderPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid Grid.Column="0" Grid.Row="0" Margin="0,2,2,0" x:Name="PART_HeaderPanel" Visibility="{TemplateBinding IsHeaderPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid.Resources>
                                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StandardEmbeddedButtonStyle}"></Style>
                             </Grid.Resources>
@@ -1616,6 +1616,22 @@
                                     Command="{x:Static local:TabablzControl.AddItemCommand}"
                                     Visibility="{TemplateBinding ShowDefaultAddButton, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     />
+                            <Grid x:Name="PART_MergeHint" Grid.Column="3" MinWidth="120" IsHitTestVisible="False">
+                                <Grid.Style>
+                                    <Style TargetType="{x:Type Grid}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Style>
+                                </Grid.Style>
+                                <Border x:Name="DefaultMergeHint" Margin="2" CornerRadius="3" Background="{TemplateBinding Foreground}">
+                                    <Border.Style>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="Opacity" Value=".25" />
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Style>
+                                    </Border.Style>
+                                </Border>
+                                <ContentControl x:Name="CustomMergeHint" Content="{TemplateBinding MergeHintTemplate}" ContentTemplate="{TemplateBinding MergeHintTemplate}" IsTabStop="False" />
+                            </Grid>
                             <ContentControl Grid.Column="3" x:Name="SuffixContentControl" 
                                             Content="{TemplateBinding HeaderSuffixContent}"
                                             ContentStringFormat="{TemplateBinding HeaderSuffixContentStringFormat}"
@@ -1626,6 +1642,25 @@
                         </Grid>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="MergeHintTemplate" Value="{x:Null}">
+                            <Setter TargetName="DefaultMergeHint" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="CustomMergeHint" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="ShowMergeHint" Value="True" />
+                                <Condition Property="IsMergeTargetParticipating" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_MergeHint" Property="Visibility" Value="Visible" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="ShowMergeHint" Value="True" />
+                                <Condition Property="IsMergeTargetParticipating" Value="True" />
+                                <Condition Property="IsMergeTargetOffered" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="DefaultMergeHint" Property="Opacity" Value=".5" />
+                        </MultiTrigger>
                         <Trigger Property="IsHeaderPanelVisible" Value="False">
                             <Setter Property="Margin" TargetName="contentPanel" Value="0 0 0 0"/>
                         </Trigger> 
@@ -1687,7 +1722,7 @@
                                 <Border x:Name="contentPanel" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Column="1" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local" Margin="-1 0 0 0">
                                     <Grid x:Name="PART_ItemsHolder" />
                                 </Border>
-                                <Grid Grid.Column="0" x:Name="HeaderContainerGrid" Visibility="{TemplateBinding IsHeaderPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid Grid.Column="0" x:Name="PART_HeaderPanel" Visibility="{TemplateBinding IsHeaderPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -1725,6 +1760,22 @@
                                             Grid.Row="2"
                                             Command="{x:Static local:TabablzControl.AddItemCommand}"
                                             Visibility="{TemplateBinding ShowDefaultAddButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <Grid x:Name="PART_MergeHint" Grid.Row="3" MinHeight="120" IsHitTestVisible="False">
+                                        <Grid.Style>
+                                            <Style TargetType="{x:Type Grid}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </Style>
+                                        </Grid.Style>
+                                        <Border x:Name="DefaultMergeHint" Margin="2" CornerRadius="3" Background="{TemplateBinding Foreground}">
+                                            <Border.Style>
+                                                <Style TargetType="{x:Type Border}">
+                                                    <Setter Property="Opacity" Value=".25" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                        <ContentControl x:Name="CustomMergeHint" Content="{TemplateBinding MergeHintTemplate}" ContentTemplate="{TemplateBinding MergeHintTemplate}" IsTabStop="False" />
+                                    </Grid>
                                     <ContentControl Grid.Row="3" x:Name="SuffixContentControl" 
                                                     Content="{TemplateBinding HeaderSuffixContent}"
                                                     ContentStringFormat="{TemplateBinding HeaderSuffixContentStringFormat}"
@@ -1733,6 +1784,27 @@
                                                     VerticalAlignment="Top" />
                                 </Grid>
                             </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="MergeHintTemplate" Value="{x:Null}">
+                                <Setter TargetName="DefaultMergeHint" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="CustomMergeHint" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="ShowMergeHint" Value="True" />
+                                    <Condition Property="IsMergeTargetParticipating" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_MergeHint" Property="Visibility" Value="Visible" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="ShowMergeHint" Value="True" />
+                                    <Condition Property="IsMergeTargetParticipating" Value="True" />
+                                    <Condition Property="IsMergeTargetOffered" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="DefaultMergeHint" Property="Opacity" Value=".5" />
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>

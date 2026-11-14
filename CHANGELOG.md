@@ -20,3 +20,19 @@ Features and fixes:
 - Feature: DependencyProperty to disable consolidate branch in TabalzControl added (e.g. to keep the main TabablzControl that is responsible for creating new tabs)
     Files changed:
         - TabablzControl.cs (https://github.com/BornToBeRoot/Dragablz/blob/a7575982a304493d44e5fe4ef726bc7c6ab0b070/Dragablz/TabablzControl.cs#L1110-L1170, https://github.com/BornToBeRoot/Dragablz/blob/a7575982a304493d44e5fe4ef726bc7c6ab0b070/Dragablz/TabablzControl.cs#L373-L388, https://github.com/BornToBeRoot/Dragablz/blob/a7575982a304493d44e5fe4ef726bc7c6ab0b070/Dragablz/TabablzControl.cs#L1261-L1268)
+
+- Fix MahApps theme: use the `MahApps.Brushes.*` resource keys (`MahApps.xaml`)
+- Update target framework to `net8.0-windows10.0.22621.0`
+- Feature: Wider hit area for the grid splitters between layout branches (`Generic.xaml`)
+- Upgrade to .NET 10 and update dependencies
+    - Target framework is now `net10.0-windows` (no Windows SDK version)
+    - `RuntimeIdentifier` / `PlatformTarget` removed from the library and the demo to allow native arm64 builds
+
+- Feature: Merge hint and larger merge area for tabs dragged as a window (opt-in, defaults unchanged)
+    - `MergeTargetArea` (`HeaderItems` (default) / `HeaderPanel`): `HeaderPanel` also accepts a tab over the empty area of the tab bar (new optional template part `PART_HeaderPanel`, renamed from `HeaderContainerGrid` in the Generic and MaterialDesign templates)
+    - `ShowMergeHint`, `MergeHintProximity` (default 48 DIPs) and `MergeHintTemplate` show a hint in the tab bar of every tab control the dragged tab can be merged into
+    - Read-only `IsMergeTargetParticipating` / `IsMergeTargetOffered` for custom templates (a `MergeHintTemplate` is instantiated inside the tab control, bind with `RelativeSource AncestorType=TabablzControl`)
+    - Vertical tab strips with fixed headers are now respected when searching a merge target; a tab dropped behind the last tab is inserted after it
+- Fix `NullReferenceException` when starting a tab drag while `InterTabController.Partition` is `null` (`TabablzControl.ItemDragStarted`)
+- Fix `NullReferenceException` when dragging a maximized `DragablzWindow` (`CriticalHandle` no longer reads a private `Window` property via reflection, it uses `WindowInteropHelper`)
+- Tests: migrate the existing NUnit assertions to the NUnit 4 constraint model (`Assert.That`)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -166,9 +165,7 @@ namespace Dragablz
         {
             get
             {
-                var value = typeof(Window).GetProperty("CriticalHandle", BindingFlags.NonPublic | BindingFlags.Instance)
-                    .GetValue(this, new object[0]);
-                return (IntPtr)value;
+                return new WindowInteropHelper(this).Handle;
             }
         }
 

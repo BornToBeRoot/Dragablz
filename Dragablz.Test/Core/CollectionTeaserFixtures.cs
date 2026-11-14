@@ -16,8 +16,8 @@ namespace Dragablz.Core.Tests
             CollectionTeaser collectionTeaser;
             var result = CollectionTeaser.TryCreate(myList, out collectionTeaser);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(collectionTeaser);
+            Assert.That(result, Is.True);
+            Assert.That(collectionTeaser, Is.Not.Null);
         }
 
         [Test]
@@ -28,8 +28,8 @@ namespace Dragablz.Core.Tests
             CollectionTeaser collectionTeaser;
             var result = CollectionTeaser.TryCreate(myList, out collectionTeaser);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(collectionTeaser);
+            Assert.That(result, Is.True);
+            Assert.That(collectionTeaser, Is.Not.Null);
         }
 
         [Test]
@@ -40,8 +40,8 @@ namespace Dragablz.Core.Tests
             CollectionTeaser collectionTeaser;
             var result = CollectionTeaser.TryCreate(myList, out collectionTeaser);
 
-            Assert.IsFalse(result);
-            Assert.IsNull(collectionTeaser);
+            Assert.That(result, Is.False);
+            Assert.That(collectionTeaser, Is.Null);
         }
 
         [Test]
@@ -49,11 +49,11 @@ namespace Dragablz.Core.Tests
         {
             var myList = new ArrayList();
             CollectionTeaser collectionTeaser;
-            Assert.IsTrue(CollectionTeaser.TryCreate(myList, out collectionTeaser));
+            Assert.That(CollectionTeaser.TryCreate(myList, out collectionTeaser), Is.True);
 
             collectionTeaser.Add("i am going to type this in, manually, twice.");
 
-            CollectionAssert.AreEquivalent(new[] { "i am going to type this in, manually, twice." }, myList);
+            Assert.That(myList, Is.EquivalentTo(new[] { "i am going to type this in, manually, twice." }));
             //i didnt really.  i copied and pasted it.
         }
 
@@ -69,11 +69,11 @@ namespace Dragablz.Core.Tests
                 5
             };
             CollectionTeaser collectionTeaser;
-            Assert.IsTrue(CollectionTeaser.TryCreate(myList, out collectionTeaser));
+            Assert.That(CollectionTeaser.TryCreate(myList, out collectionTeaser), Is.True);
 
             collectionTeaser.Remove(3);
 
-            CollectionAssert.AreEquivalent(new[] { 1, 2, 4, 5 }, myList);
+            Assert.That(myList, Is.EquivalentTo(new[] { 1, 2, 4, 5 }));
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace Dragablz.Core.Tests
         {
             var myList = A.Fake<ICollection<string>>();
             CollectionTeaser collectionTeaser;
-            Assert.IsTrue(CollectionTeaser.TryCreate(myList, out collectionTeaser));
+            Assert.That(CollectionTeaser.TryCreate(myList, out collectionTeaser), Is.True);
 
             collectionTeaser.Add("hello");
 
@@ -94,7 +94,7 @@ namespace Dragablz.Core.Tests
         {
             var myList = A.Fake<ICollection<string>>();
             CollectionTeaser collectionTeaser;
-            Assert.IsTrue(CollectionTeaser.TryCreate(myList, out collectionTeaser));
+            Assert.That(CollectionTeaser.TryCreate(myList, out collectionTeaser), Is.True);
 
             collectionTeaser.Remove("bye");
 

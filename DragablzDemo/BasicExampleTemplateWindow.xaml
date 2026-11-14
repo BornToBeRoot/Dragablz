@@ -10,6 +10,8 @@
         d:DataContext="{d:DesignInstance dragablzDemo:BasicExampleTemplateModel, IsDesignTimeCreatable=False}">
     <dragablz:TabablzControl Margin="8 8 8 8"
                              x:Name="TabablzControl"
+                             MergeTargetArea="HeaderPanel"
+                             ShowMergeHint="True"
                              Style="{StaticResource BasicExamplesTabStyle}">
         <dragablz:TabablzControl.InterTabController>
             <dragablz:InterTabController InterTabClient="{Binding InterTabClient}" Partition="{Binding Partition}" />

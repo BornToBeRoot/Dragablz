@@ -22,7 +22,7 @@ namespace Dragablz.Dockablz.Tests
         {
             var result = TilerCalculator.GetCellCountPerColumn(totalCells);
 
-            CollectionAssert.AreEqual(expectedCellsPerColumn, result);
+            Assert.That(result, Is.EqualTo(expectedCellsPerColumn));
         }
     }
 }

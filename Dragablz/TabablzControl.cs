@@ -26,6 +26,7 @@ namespace Dragablz
     /// </summary>
     [TemplatePart(Name = HeaderItemsControlPartName, Type = typeof(DragablzItemsControl))]
     [TemplatePart(Name = ItemsHolderPartName, Type = typeof(Panel))]
+    [TemplatePart(Name = HeaderPanelPartName, Type = typeof(FrameworkElement))]
     public class TabablzControl : TabControl
     {
         /// <summary>
@@ -36,6 +37,10 @@ namespace Dragablz
         /// Template part.
         /// </summary>
         public const string ItemsHolderPartName = "PART_ItemsHolder";
+        /// <summary>
+        /// Optional template part. The whole header (tab bar), used for <see cref="Dragablz.MergeTargetArea.HeaderPanel"/>.
+        /// </summary>
+        public const string HeaderPanelPartName = "PART_HeaderPanel";
 
         /// <summary>
         /// Routed command which can be used to close a tab.
@@ -49,11 +54,15 @@ namespace Dragablz
 
         private static readonly HashSet<TabablzControl> LoadedInstances = new HashSet<TabablzControl>();
         private static readonly HashSet<TabablzControl> VisibleInstances = new HashSet<TabablzControl>();
+        private static readonly List<TabablzControl> MergeTargetsInDrag = new List<TabablzControl>();
+        private static TabablzControl _mergeHintOwner;
 
         private Panel _itemsHolder;
         private TabHeaderDragStartInformation _tabHeaderDragStartInformation;
         private WeakReference _previousSelection;
         private DragablzItemsControl _dragablzItemsControl;
+        private FrameworkElement _headerPanel;
+        private bool _isMergeHintWireUpPending;
         private IDisposable _templateSubscription;
         private readonly SerialDisposable _windowSubscription = new SerialDisposable();
 
@@ -527,6 +536,113 @@ namespace Dragablz
             set { SetValue(ConsolidatingOrphanedItemCallbackProperty, value); }
         }
 
+        /// <summary>
+        /// Defines which part of the tab bar accepts a tab which is dragged (as a window) over it. The default
+        /// <see cref="Dragablz.MergeTargetArea.HeaderItems"/> only accepts it over the existing tabs.
+        /// <see cref="Dragablz.MergeTargetArea.HeaderPanel"/> requires the optional template part <see cref="HeaderPanelPartName"/>.
+        /// </summary>
+        public static readonly DependencyProperty MergeTargetAreaProperty = DependencyProperty.Register(
+            "MergeTargetArea", typeof(MergeTargetArea), typeof(TabablzControl),
+            new PropertyMetadata(MergeTargetArea.HeaderItems));
+
+        /// <summary>
+        /// Defines which part of the tab bar accepts a tab which is dragged (as a window) over it.
+        /// </summary>
+        public MergeTargetArea MergeTargetArea
+        {
+            get { return (MergeTargetArea)GetValue(MergeTargetAreaProperty); }
+            set { SetValue(MergeTargetAreaProperty, value); }
+        }
+
+        /// <summary>
+        /// Indicates whether a hint is shown in the tab bar while a tab can be dropped into this control.
+        /// </summary>
+        public static readonly DependencyProperty ShowMergeHintProperty = DependencyProperty.Register(
+            "ShowMergeHint", typeof(bool), typeof(TabablzControl), new PropertyMetadata(default(bool)));
+
+        /// <summary>
+        /// Indicates whether a hint is shown in the tab bar while a tab can be dropped into this control.
+        /// </summary>
+        public bool ShowMergeHint
+        {
+            get { return (bool)GetValue(ShowMergeHintProperty); }
+            set { SetValue(ShowMergeHintProperty, value); }
+        }
+
+        /// <summary>
+        /// Distance (device independent pixels) around the merge target within which <see cref="IsMergeTargetOffered"/> is set.
+        /// </summary>
+        public static readonly DependencyProperty MergeHintProximityProperty = DependencyProperty.Register(
+            "MergeHintProximity", typeof(double), typeof(TabablzControl), new PropertyMetadata(48d));
+
+        /// <summary>
+        /// Distance (device independent pixels) around the merge target within which <see cref="IsMergeTargetOffered"/> is set.
+        /// </summary>
+        public double MergeHintProximity
+        {
+            get { return (double)GetValue(MergeHintProximityProperty); }
+            set { SetValue(MergeHintProximityProperty, value); }
+        }
+
+        /// <summary>
+        /// Optional template of the merge hint. A default visual is used if not set. The template is
+        /// instantiated inside the tab control, so bind to <see cref="IsMergeTargetOffered"/> with a
+        /// <c>RelativeSource AncestorType=TabablzControl</c> binding.
+        /// </summary>
+        public static readonly DependencyProperty MergeHintTemplateProperty = DependencyProperty.Register(
+            "MergeHintTemplate", typeof(DataTemplate), typeof(TabablzControl), new PropertyMetadata(default(DataTemplate)));
+
+        /// <summary>
+        /// Optional template of the merge hint. A default visual is used if not set.
+        /// </summary>
+        public DataTemplate MergeHintTemplate
+        {
+            get { return (DataTemplate)GetValue(MergeHintTemplateProperty); }
+            set { SetValue(MergeHintTemplateProperty, value); }
+        }
+
+        private static readonly DependencyPropertyKey IsMergeTargetParticipatingPropertyKey =
+            DependencyProperty.RegisterReadOnly(
+                "IsMergeTargetParticipating", typeof(bool), typeof(TabablzControl), new PropertyMetadata(default(bool)));
+
+        /// <summary>
+        /// Readonly dependency property which indicates that another tab control is dragging its window and
+        /// this control is a possible target to merge it into.
+        /// </summary>
+        public static readonly DependencyProperty IsMergeTargetParticipatingProperty =
+            IsMergeTargetParticipatingPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Readonly dependency property which indicates that another tab control is dragging its window and
+        /// this control is a possible target to merge it into.
+        /// </summary>
+        public bool IsMergeTargetParticipating
+        {
+            get { return (bool)GetValue(IsMergeTargetParticipatingProperty); }
+            private set { SetValue(IsMergeTargetParticipatingPropertyKey, value); }
+        }
+
+        private static readonly DependencyPropertyKey IsMergeTargetOfferedPropertyKey =
+            DependencyProperty.RegisterReadOnly(
+                "IsMergeTargetOffered", typeof(bool), typeof(TabablzControl), new PropertyMetadata(default(bool)));
+
+        /// <summary>
+        /// Readonly dependency property which indicates that the cursor of a dragged window is over or near
+        /// (see <see cref="MergeHintProximity"/>) this control, so a drop would merge the tab into it.
+        /// </summary>
+        public static readonly DependencyProperty IsMergeTargetOfferedProperty =
+            IsMergeTargetOfferedPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Readonly dependency property which indicates that the cursor of a dragged window is over or near
+        /// (see <see cref="MergeHintProximity"/>) this control, so a drop would merge the tab into it.
+        /// </summary>
+        public bool IsMergeTargetOffered
+        {
+            get { return (bool)GetValue(IsMergeTargetOfferedProperty); }
+            private set { SetValue(IsMergeTargetOfferedPropertyKey, value); }
+        }
+
         private static readonly DependencyPropertyKey IsDraggingWindowPropertyKey =
             DependencyProperty.RegisterReadOnly(
                 "IsDraggingWindow", typeof(bool), typeof(TabablzControl),
@@ -580,6 +696,8 @@ namespace Dragablz
             };
             instance.RaiseEvent(args);
 
+            if (!(bool)e.NewValue)
+                instance.ReleaseMergeTargetStates();
         }
 
         /// <summary>
@@ -712,6 +830,8 @@ namespace Dragablz
 
             if (SelectedItem == null)
                 SetCurrentValue(SelectedItemProperty, Items.OfType<object>().FirstOrDefault());
+
+            _headerPanel = GetTemplateChild(HeaderPanelPartName) as FrameworkElement;
 
             _itemsHolder = GetTemplateChild(ItemsHolderPartName) as Panel;
             UpdateSelectedItem();
@@ -936,6 +1056,7 @@ namespace Dragablz
         {
             _windowSubscription.Disposable = Disposable.Empty;
             LoadedInstances.Remove(this);
+            ReleaseMergeTargetStates();
         }
 
         private void MarkWrappedTabItems()
@@ -990,7 +1111,7 @@ namespace Dragablz
             foreach (var otherItem in _dragablzItemsControl.Containers<DragablzItem>().Except(e.DragablzItem))
                 otherItem.IsSelected = false;
             e.DragablzItem.IsSelected = true;
-            e.DragablzItem.PartitionAtDragStart = InterTabController?.Partition.ToString();
+            e.DragablzItem.PartitionAtDragStart = InterTabController?.Partition?.ToString();
             var item = _dragablzItemsControl.ItemContainerGenerator.ItemFromContainer(e.DragablzItem);
             var tabItem = item as TabItem;
             if (tabItem != null)
@@ -998,7 +1119,11 @@ namespace Dragablz
             SelectedItem = item;
 
             if (ShouldDragWindow(sourceOfDragItemsControl))
+            {
                 IsDraggingWindow = true;
+                //the partition is not known yet for a freshly created host, so wire up on the first delta
+                _isMergeHintWireUpPending = true;
+            }
         }
 
         private bool ShouldDragWindow(DragablzItemsControl sourceOfDragItemsControl)
@@ -1016,6 +1141,13 @@ namespace Dragablz
             if (sourceOfDragItemsControl == null || !Equals(sourceOfDragItemsControl, _dragablzItemsControl)) return;
 
             if (!ShouldDragWindow(sourceOfDragItemsControl)) return;
+
+            if (_isMergeHintWireUpPending)
+            {
+                _isMergeHintWireUpPending = false;
+                WireUpMergeTargets();
+            }
+            UpdateOfferedMergeTarget();
 
             if (MonitorReentry(e)) return;
 
@@ -1049,6 +1181,125 @@ namespace Dragablz
             e.Handled = true;
         }
 
+        /// <summary>
+        /// Other tab controls of the same partition a dragged tab could be merged into.
+        /// </summary>
+        private IEnumerable<TabablzControl> GetMergeTargetCandidates()
+        {
+            return LoadedInstances
+                .Where(
+                    tc =>
+                        tc != this && tc.InterTabController != null && InterTabController != null
+                        && Equals(tc.InterTabController.Partition, InterTabController.Partition)
+                        && tc._dragablzItemsControl != null)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Screen bounds (device pixels) in which a dragged tab is merged into this control.
+        /// </summary>
+        internal Rect? GetMergeTargetScreenBounds()
+        {
+            if (_dragablzItemsControl == null) return null;
+
+            var itemsBounds = GetScreenBounds(_dragablzItemsControl);
+            Rect? panelBounds = null;
+            if (MergeTargetArea == MergeTargetArea.HeaderPanel && _headerPanel != null && _headerPanel.IsVisible)
+                panelBounds = GetScreenBounds(_headerPanel);
+
+            var orientation = TabStripPlacement == Dock.Top || TabStripPlacement == Dock.Bottom
+                ? Orientation.Horizontal
+                : Orientation.Vertical;
+
+            var lastFixedItem = _dragablzItemsControl.DragablzItems()
+                .OrderBy(di => di.LogicalIndex)
+                .Take(_dragablzItemsControl.FixedItemCount)
+                .LastOrDefault();
+            var fixedItemsEnd = 0d;
+            if (lastFixedItem != null)
+            {
+                var scale = orientation == Orientation.Horizontal
+                    ? VisualTreeHelper.GetDpi(_dragablzItemsControl).DpiScaleX
+                    : VisualTreeHelper.GetDpi(_dragablzItemsControl).DpiScaleY;
+                fixedItemsEnd = orientation == Orientation.Horizontal
+                    ? (lastFixedItem.X + lastFixedItem.ActualWidth) * scale
+                    : (lastFixedItem.Y + lastFixedItem.ActualHeight) * scale;
+            }
+
+            return MergeTargetCalculator.GetBounds(itemsBounds, panelBounds, MergeTargetArea, orientation, fixedItemsEnd);
+        }
+
+        private static Rect GetScreenBounds(FrameworkElement element)
+        {
+            return new Rect(
+                element.PointToScreen(new Point()),
+                element.PointToScreen(new Point(element.ActualWidth, element.ActualHeight)));
+        }
+
+        private void WireUpMergeTargets()
+        {
+            ClearMergeTargetStates();
+            if (_dragablzItemsControl == null || InterTabController == null) return;
+
+            var myWindow = Window.GetWindow(this);
+            _mergeHintOwner = this;
+            foreach (var target in GetMergeTargetCandidates()
+                .Where(tc => tc.IsVisible && !Equals(Window.GetWindow(tc), myWindow)))
+            {
+                target.IsMergeTargetParticipating = true;
+                MergeTargetsInDrag.Add(target);
+            }
+        }
+
+        private void UpdateOfferedMergeTarget()
+        {
+            if (!ReferenceEquals(_mergeHintOwner, this) || MergeTargetsInDrag.Count == 0) return;
+
+            var screenMousePosition = _dragablzItemsControl.PointToScreen(Mouse.GetPosition(_dragablzItemsControl));
+            var topMost = Native.SortWindowsTopToBottom(Application.Current.Windows.OfType<Window>()).ToList();
+
+            //same rule as MonitorReentry: the first (top most) window under the cursor wins
+            TabablzControl offered = null;
+            var offeredIndex = int.MaxValue;
+            foreach (var target in MergeTargetsInDrag)
+            {
+                var bounds = target.GetMergeTargetScreenBounds();
+                if (!bounds.HasValue) continue;
+
+                var proximity = target.MergeHintProximity * VisualTreeHelper.GetDpi(target).DpiScaleX;
+                if (!MergeTargetCalculator.Inflate(bounds.Value, proximity).Contains(screenMousePosition)) continue;
+
+                var index = topMost.IndexOf(Window.GetWindow(target));
+                if (index < 0 || index >= offeredIndex) continue;
+                offered = target;
+                offeredIndex = index;
+            }
+
+            foreach (var target in MergeTargetsInDrag)
+                target.IsMergeTargetOffered = ReferenceEquals(target, offered);
+        }
+
+        private void ReleaseMergeTargetStates()
+        {
+            _isMergeHintWireUpPending = false;
+            if (ReferenceEquals(_mergeHintOwner, this))
+                ClearMergeTargetStates();
+        }
+
+        /// <summary>
+        /// Resets <see cref="IsMergeTargetParticipating"/> and <see cref="IsMergeTargetOffered"/> on all controls.
+        /// </summary>
+        internal static void ClearMergeTargetStates()
+        {
+            foreach (var target in MergeTargetsInDrag)
+            {
+                target.IsMergeTargetOffered = false;
+                target.IsMergeTargetParticipating = false;
+            }
+            MergeTargetsInDrag.Clear();
+            _mergeHintOwner = null;
+        }
+
         private bool MonitorReentry(DragablzDragDeltaEventArgs e)
         {
             var screenMousePosition = _dragablzItemsControl.PointToScreen(Mouse.GetPosition(_dragablzItemsControl));
@@ -1059,33 +1310,13 @@ namespace Dragablz
                 return false;
             }
 
-            var otherTabablzControls = LoadedInstances
-                .Where(
-                    tc =>
-                        tc != this && tc.InterTabController != null && InterTabController != null
-                        && Equals(tc.InterTabController.Partition, InterTabController.Partition)
-                        && tc._dragablzItemsControl != null)
-                .Select(tc =>
-                {
-                    var topLeft = tc._dragablzItemsControl.PointToScreen(new Point());
-                    var lastFixedItem = tc._dragablzItemsControl.DragablzItems()
-                        .OrderBy(di => di.LogicalIndex)
-                        .Take(tc._dragablzItemsControl.FixedItemCount)
-                        .LastOrDefault();
-                    //TODO work this for vert tabs
-                    if (lastFixedItem != null)
-                        topLeft.Offset(lastFixedItem.X + lastFixedItem.ActualWidth, 0);
-                    var bottomRight =
-                        tc._dragablzItemsControl.PointToScreen(new Point(tc._dragablzItemsControl.ActualWidth,
-                            tc._dragablzItemsControl.ActualHeight));
-
-                    return new { tc, topLeft, bottomRight };
-                });
-
+            var otherTabablzControls = GetMergeTargetCandidates()
+                .Select(tc => new { tc, bounds = tc.GetMergeTargetScreenBounds() })
+                .Where(a => a.bounds.HasValue);
 
             var target = Native.SortWindowsTopToBottom(Application.Current.Windows.OfType<Window>())
                 .Join(otherTabablzControls, w => w, a => Window.GetWindow(a.tc), (w, a) => a)
-                .FirstOrDefault(a => new Rect(a.topLeft, a.bottomRight).Contains(screenMousePosition));
+                .FirstOrDefault(a => a.bounds.Value.Contains(screenMousePosition));
 
             if (target == null) return false;
 
@@ -1102,6 +1333,7 @@ namespace Dragablz
             var interTabTransfer = new InterTabTransfer(item, e.DragablzItem, mousePositionOnItem, floatingItemSnapShots);
             e.DragablzItem.IsDragging = false;
 
+            ClearMergeTargetStates();
             target.tc.ReceiveDrag(interTabTransfer);
             e.Cancel = true;
 
@@ -1177,6 +1409,7 @@ namespace Dragablz
             _interTabTransfer = null;
             _dragablzItemsControl.LockedMeasure = null;
             IsDraggingWindow = false;
+            ReleaseMergeTargetStates();
         }
 
         private void ItemDragDelta(object sender, DragablzDragDeltaEventArgs e)
@@ -1361,6 +1594,13 @@ namespace Dragablz
                 .Take(_dragablzItemsControl.FixedItemCount)
                 .LastOrDefault();
 
+            var lastItemEnd = _dragablzItemsControl.DragablzItems()
+                .Select(i => TabStripPlacement == Dock.Top || TabStripPlacement == Dock.Bottom
+                    ? i.X + i.ActualWidth
+                    : i.Y + i.ActualHeight)
+                .DefaultIfEmpty(0d)
+                .Max();
+
             AddToSource(interTabTransfer.Item);
             SelectedItem = interTabTransfer.Item;
 
@@ -1394,6 +1634,9 @@ namespace Dragablz
                         {
                             newX = Math.Max(newX, lastFixedItem.X + lastFixedItem.ActualWidth);
                         }
+                        //a drop on the empty part of the header must end up behind the last item
+                        newX = MergeTargetCalculator.ClampInsertPosition(newX,
+                            lastFixedItem != null ? lastFixedItem.X + lastFixedItem.ActualWidth : 0, lastItemEnd);
                         newContainer.X = newX;
                         newContainer.Y = 0;
                     }
@@ -1406,6 +1649,8 @@ namespace Dragablz
                         {
                             newY = Math.Max(newY, lastFixedItem.Y + lastFixedItem.ActualHeight);
                         }
+                        newY = MergeTargetCalculator.ClampInsertPosition(newY,
+                            lastFixedItem != null ? lastFixedItem.Y + lastFixedItem.ActualHeight : 0, lastItemEnd);
                         newContainer.X = 0;
                         newContainer.Y = newY;
                     }

@@ -32,6 +32,8 @@
         <Style TargetType="{x:Type dragablz:TabablzControl}" x:Key="BasicExamplesTabStyle">
             <Setter Property="Margin" Value="8 8 8 8" />
             <Setter Property="HeaderPrefixContent" Value="☺" />
+            <Setter Property="MergeTargetArea" Value="HeaderPanel" />
+            <Setter Property="ShowMergeHint" Value="True" />
             <Setter Property="HeaderSuffixContent" Value="☻" />
             <Setter Property="HeaderSuffixContentTemplate">
                 <Setter.Value>
